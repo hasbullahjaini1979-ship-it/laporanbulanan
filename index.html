@@ -634,7 +634,7 @@ function callAPIjsonp(params){
       var s = document.getElementById(cbName);
       if(s) s.remove();
       resolve({ok:false, msg:'Timeout: server tidak merespons dalam 15 detik'});
-    }, 15000);
+    }, 30000);
 
     window[cbName] = function(data){
       clearTimeout(timer);
@@ -659,7 +659,7 @@ function callAPIjsonp(params){
       s.remove();
       resolve({ok:false, msg:'Gagal memuat script. Periksa URL API.'});
     };
-    document.head.appendChild(s);
+    (document.head || document.body).appendChild(s);
   });
 }
 
@@ -1424,3 +1424,4 @@ function cetakLaporan(){
 })();
 </script>
 </div>
+
