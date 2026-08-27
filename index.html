@@ -283,6 +283,27 @@
   #slb-root .hero{grid-template-columns:1fr}
   #slb-root .hari{grid-template-columns:repeat(2,1fr)}
 }
+#slb-root .admin-subtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+#slb-root .admin-subtab{padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);
+  background:#fff;color:var(--muted);font-weight:700;font-size:.78rem;cursor:pointer;font-family:inherit}
+#slb-root .admin-subtab.on{background:linear-gradient(135deg,#c62828,#0277bd);color:#fff;border-color:transparent}
+#slb-root .admin-panel{display:none}
+#slb-root .admin-panel.on{display:block}
+#slb-root .atbl{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:10px}
+#slb-root .atbl th,#slb-root .atbl td{border:1px solid var(--border);padding:7px 9px;text-align:left}
+#slb-root .atbl th{background:#fde8e8;color:var(--c1);font-weight:800}
+#slb-root .atbl tr:nth-child(even) td{background:#fdf8f8}
+#slb-root .abtn{padding:4px 10px;border-radius:6px;border:none;cursor:pointer;font-weight:700;
+  font-size:.72rem;font-family:inherit;margin-right:4px}
+#slb-root .abtn-e{background:#e3f2fd;color:#0277bd}
+#slb-root .abtn-d{background:#fdecea;color:#c62828}
+#slb-root .abtn-a{background:#e8f6ee;color:#1a6b3c}
+#slb-root .logo-prev{width:70px;height:70px;border-radius:10px;object-fit:contain;
+  border:1.5px solid var(--border);background:#fdf5f5;margin-top:8px}
+#slb-root .admin-badge{display:inline-block;font-size:.68rem;font-weight:800;padding:2px 9px;
+  border-radius:12px}
+#slb-root .admin-badge.ok{background:#e8f6ee;color:#1a6b3c}
+#slb-root .admin-badge.no{background:#fdecea;color:#c62828}
 @media print{
   body > *{ display:none !important; }
   body > #slb-root,body > div:has(#slb-root){ display:block !important; }
@@ -332,6 +353,7 @@
   <button class="tab-btn on" id="tab-dash">Dashboard</button>
   <button class="tab-btn" id="tab-input">Input Kelas</button>
   <button class="tab-btn" id="tab-cetak">Cetak</button>
+  <button class="tab-btn" id="tab-admin">Admin</button>
 </div>
 
 <!-- DASHBOARD -->
@@ -523,17 +545,159 @@
   <div class="print-area" id="CT_area"><div class="loading"><div class="spin"></div></div></div>
 </div>
 
+<!-- ADMIN LOGIN -->
+<div class="panel" id="P-admin-login">
+  <div class="login-box">
+    <div style="width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#c62828,#0277bd);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:1.5rem">&#9881;</div>
+    <div style="font-size:1.05rem;font-weight:900;color:var(--c1);margin-bottom:4px">Login Admin</div>
+    <div style="font-size:.75rem;color:var(--muted);margin-bottom:14px">Masukkan password admin untuk mengelola pengaturan sekolah</div>
+    <div id="ADM_msg"></div>
+    <label class="fl" style="text-align:left">Password Admin</label>
+    <input type="password" class="fi" id="ADM_pw" placeholder="Password admin...">
+    <div style="margin-top:10px;display:flex;gap:8px">
+      <button class="btn btn-p" id="ADM_btn" style="flex:1">Masuk</button>
+      <button class="btn" style="background:#eee;flex:1;font-family:inherit" id="ADM_batal">Batal</button>
+    </div>
+    <div style="margin-top:12px;font-size:.7rem;color:var(--muted)">Default: <strong>admin2025</strong></div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="panel" id="P-admin">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+    <div style="font-weight:800;font-size:.95rem;color:var(--c1)">Panel Admin</div>
+    <button class="btn btn-sm" style="background:#eee;font-family:inherit" id="ADM_back">Kembali ke Dashboard</button>
+  </div>
+  <div class="admin-subtabs">
+    <button class="admin-subtab on" data-sub="sekolah">Data Sekolah</button>
+    <button class="admin-subtab" data-sub="kelas">Data Kelas</button>
+    <button class="admin-subtab" data-sub="guru">Data Guru</button>
+    <button class="admin-subtab" data-sub="password">Data Password</button>
+    <button class="admin-subtab" data-sub="ta">Tahun Ajaran</button>
+  </div>
+
+  <!-- SUB: DATA SEKOLAH -->
+  <div class="admin-panel on" id="AP-sekolah">
+    <div class="card">
+      <div class="sec-ttl">Data Sekolah</div>
+      <div id="SK_msg"></div>
+      <label class="fl">Nama Sekolah</label>
+      <input type="text" class="fi" id="SK_nama">
+      <div class="fg2">
+        <div><label class="fl">Nama Kepala Sekolah</label><input type="text" class="fi" id="SK_kepsek"></div>
+        <div><label class="fl">NIP Kepala Sekolah</label><input type="text" class="fi" id="SK_nip"></div>
+      </div>
+      <label class="fl">Logo Sekolah</label>
+      <input type="file" class="fi" id="SK_logoFile" accept="image/*">
+      <br><img id="SK_logoPrev" class="logo-prev" style="display:none">
+      <div class="btn-row">
+        <button class="btn btn-p" id="btn-simpan-sekolah">Simpan Data Sekolah</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUB: DATA KELAS -->
+  <div class="admin-panel" id="AP-kelas">
+    <div class="card">
+      <div class="sec-ttl" id="KL_formTtl">Tambah / Edit Kelas</div>
+      <div id="KL_msg"></div>
+      <input type="hidden" id="KL_kodeAsli">
+      <div class="fg2">
+        <div><label class="fl">Kode Kelas (mis. 1, 2, 3A)</label><input type="text" class="fi" id="KL_kode"></div>
+        <div><label class="fl">Nama Kelas (tampilan)</label><input type="text" class="fi" id="KL_nama"></div>
+      </div>
+      <div class="fg2">
+        <div><label class="fl">Nama Wali Kelas</label><input type="text" class="fi" id="KL_wali"></div>
+        <div><label class="fl">NIP Wali Kelas</label><input type="text" class="fi" id="KL_nipwali"></div>
+      </div>
+      <label class="fl">Password Awal (khusus saat menambah kelas baru)</label>
+      <input type="text" class="fi" id="KL_pw" placeholder="Kosongkan jika sedang mengedit kelas">
+      <div class="btn-row">
+        <button class="btn btn-p" id="btn-simpan-kelas">Simpan Kelas</button>
+        <button class="btn" style="background:#eee;font-family:inherit" id="btn-batal-kelas">Batal</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec-ttl">Daftar Kelas</div>
+      <div id="KL_list" class="loading"><div class="spin"></div></div>
+    </div>
+  </div>
+
+  <!-- SUB: DATA GURU -->
+  <div class="admin-panel" id="AP-guru">
+    <div class="card">
+      <div class="sec-ttl" id="GR_formTtl">Tambah / Edit Guru</div>
+      <div id="GR_msg"></div>
+      <input type="hidden" id="GR_idAsli">
+      <div class="fg2">
+        <div><label class="fl">Nama Guru</label><input type="text" class="fi" id="GR_nama"></div>
+        <div><label class="fl">NIP</label><input type="text" class="fi" id="GR_nip"></div>
+      </div>
+      <div class="fg2">
+        <div><label class="fl">Jabatan</label><input type="text" class="fi" id="GR_jabatan" placeholder="Guru Kelas / Guru Mapel / dll"></div>
+        <div><label class="fl">Kelas Diampu</label><input type="text" class="fi" id="GR_kelasAsuh"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-p" id="btn-simpan-guru">Simpan Guru</button>
+        <button class="btn" style="background:#eee;font-family:inherit" id="btn-batal-guru">Batal</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec-ttl">Daftar Guru</div>
+      <div id="GR_list" class="loading"><div class="spin"></div></div>
+    </div>
+  </div>
+
+  <!-- SUB: DATA PASSWORD -->
+  <div class="admin-panel" id="AP-password">
+    <div class="card">
+      <div class="sec-ttl">Ganti Password Admin</div>
+      <div id="PW_admsg"></div>
+      <div class="fg2">
+        <div><label class="fl">Password Admin Lama</label><input type="password" class="fi" id="PW_adOld"></div>
+        <div><label class="fl">Password Admin Baru (min. 6)</label><input type="password" class="fi" id="PW_adNew"></div>
+      </div>
+      <div class="btn-row"><button class="btn btn-r" id="btn-ganti-pw-admin">Ganti Password Admin</button></div>
+    </div>
+    <div class="card">
+      <div class="sec-ttl">Reset Password Wali Kelas</div>
+      <div id="PW_kelmsg"></div>
+      <div class="fg2">
+        <div><label class="fl">Pilih Kelas</label><select class="fi" id="PW_kelas"></select></div>
+        <div><label class="fl">Password Baru (min. 6)</label><input type="text" class="fi" id="PW_kelNew"></div>
+      </div>
+      <div class="btn-row"><button class="btn btn-r" id="btn-reset-pw-kelas">Reset Password Kelas</button></div>
+    </div>
+  </div>
+
+  <!-- SUB: TAHUN AJARAN -->
+  <div class="admin-panel" id="AP-ta">
+    <div class="card">
+      <div class="sec-ttl">Tambah Tahun Ajaran</div>
+      <div id="TA_msg"></div>
+      <div class="fg2">
+        <div><label class="fl">Tahun Ajaran (mis. 2025/2026)</label><input type="text" class="fi" id="TA_baru"></div>
+        <div style="display:flex;align-items:flex-end"><button class="btn btn-p" id="btn-tambah-ta" style="width:100%">Tambah Tahun Ajaran</button></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec-ttl">Daftar Tahun Ajaran</div>
+      <div id="TA_list" class="loading"><div class="spin"></div></div>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script>
 (function(){
 'use strict';
-var API = 'https://script.google.com/macros/s/AKfycbyLemj4ZgFoN_hmlQW4-14OXtyNBQgms6Tz3kHjsp83K47q40A3vinfUBkFUKBbCZHM/exec';
+var API = 'https://script.google.com/macros/s/AKfycbyDgi47l3bXLr-7h-44ZQoMDM62pWG8s6VydCkHJH1Bhb73EmkwdFxchBh_B3y1VXbN/exec';
 var AGAMA = ['Islam','Protestan','Katolik','Hindu','Budha','Konghucu'];
 var USIA  = ['6 tahun','7 tahun','8 tahun','9 tahun','10 tahun','11 tahun','12 tahun','13 tahun'];
 var BNAME = ['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 var KC    = {1:'#e84393',2:'#f9a825',3:'#27ae60',4:'#0277bd',5:'#8e44ad',6:'#c62828'};
 var KG    = {1:'linear-gradient(135deg,#c0166e,#e84393)',2:'linear-gradient(135deg,#b7780a,#f9a825)',3:'linear-gradient(135deg,#145a32,#27ae60)',4:'linear-gradient(135deg,#c62828,#0277bd)',5:'linear-gradient(135deg,#6c3483,#8e44ad)',6:'linear-gradient(135deg,#8b0000,#c62828)'};
-var S = { bulan:prevBulan(), dash:null, CH:{}, lk:null, ltarget:null, ak:null, saving:false, bulanList:[] };
+var S = { bulan:prevBulan(), dash:null, CH:{}, lk:null, ltarget:null, ak:null, saving:false, bulanList:[], sekolah:null };
 
 function nowBulan(){ var d=new Date(); return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2); }
 function prevBulan(){ var d=new Date(); d.setDate(1); d.setMonth(d.getMonth()-1); return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2); }
@@ -588,13 +752,14 @@ function setupTabs(){
   var inBulan=el('IN_bulan'); if(inBulan) inBulan.addEventListener('change',loadInput);
   var ctBulan=el('CT_bulan'); if(ctBulan) ctBulan.addEventListener('change',renderCetak);
   var lgPw=el('LG_pw'); if(lgPw) lgPw.addEventListener('keydown',function(e){ if(e.key==='Enter') doLogin(); });
+  setupAdminTabs();
 }
 
 function goTab(name){
   document.querySelectorAll('#slb-root .panel').forEach(function(p){ p.classList.remove('on'); });
   document.querySelectorAll('#slb-root .tab-btn').forEach(function(b){ b.classList.remove('on'); });
   var pd=el('P-'+name); if(pd) pd.classList.add('on');
-  var map={dash:0,login:1,input:1,cetak:2,detail:0};
+  var map={dash:0,login:1,input:1,cetak:2,detail:0,'admin-login':3,admin:3};
   var btns=document.querySelectorAll('#slb-root .tab-btn');
   var idx=map[name]; if(idx!==undefined&&btns[idx]) btns[idx].classList.add('on');
 }
@@ -604,14 +769,14 @@ function goLogin(target){
   el('LG_msg').innerHTML=''; el('LG_pw').value='';
   el('LG_btn').disabled=false; el('LG_btn').textContent='Masuk';
   var g=el('LG_grid'); g.innerHTML='';
-  for(var k=1;k<=6;k++){
-    (function(kk){
-      var b=document.createElement('button');
-      b.className='ksb'+(S.lk===kk?' on':''); b.textContent='Kelas '+kk;
-      b.addEventListener('click',function(){ S.lk=kk; document.querySelectorAll('#slb-root .ksb').forEach(function(x){ x.classList.remove('on'); }); b.classList.add('on'); el('LG_pw').focus(); });
-      g.appendChild(b);
-    })(k);
-  }
+  var list=(KELAS.length>0)?KELAS:defaultKelasList();
+  list.forEach(function(kobj){
+    var kk=String(kobj.kode);
+    var b=document.createElement('button');
+    b.className='ksb'+(S.lk===kk?' on':''); b.textContent=kobj.nama||('Kelas '+kk);
+    b.addEventListener('click',function(){ S.lk=kk; document.querySelectorAll('#slb-root .ksb').forEach(function(x){ x.classList.remove('on'); }); b.classList.add('on'); el('LG_pw').focus(); });
+    g.appendChild(b);
+  });
   setTimeout(function(){ el('LG_pw').focus(); },200);
 }
 
@@ -650,20 +815,22 @@ function renderHero(t){
 }
 
 function renderKgrid(kd){
-  var max=1; for(var k=1;k<=6;k++){ var tot=(kd[String(k)]||{}).total||0; if(tot>max) max=tot; }
+  var list=(KELAS.length>0)?KELAS:defaultKelasList();
+  var max=1; list.forEach(function(kobj){ var tot=(kd[String(kobj.kode)]||{}).total||0; if(tot>max) max=tot; });
   var g=el('D_kgrid'); g.innerHTML='';
-  for(var k=1;k<=6;k++){
-    var d=kd[String(k)]||{}, p=Math.round(((d.total||0)/max)*100);
-    var div=document.createElement('div'); div.className='kcard ani'; div.setAttribute('data-k',String(k)); div.style.animationDelay=(k-1)*.06+'s';
+  list.forEach(function(kobj,idx){
+    var kode=String(kobj.kode), col=kelasColor(kode).s;
+    var d=kd[kode]||{}, p=Math.round(((d.total||0)/max)*100);
+    var div=document.createElement('div'); div.className='kcard ani'; div.setAttribute('data-k',kode); div.style.animationDelay=idx*.06+'s';
     var nd=!d.hasData?'<div class="no-data-tag">Belum ada data</div>':'';
-    div.innerHTML='<div class="kbadge">'+k+'</div><div class="kcard-name">Kelas '+k+'</div><div class="kcard-wali">'+(d.namaWali||'(Belum diisi)')+'</div>'+nd+
-      '<div class="kbar-wrap"><div class="kbar-fill" style="background:'+KC[k]+'" data-p="'+p+'"></div></div>'+
+    div.innerHTML='<div class="kbadge" style="background:'+col+'">'+kode+'</div><div class="kcard-name">'+(kobj.nama||('Kelas '+kode))+'</div><div class="kcard-wali">'+(d.namaWali||kobj.wali||'(Belum diisi)')+'</div>'+nd+
+      '<div class="kbar-wrap"><div class="kbar-fill" style="background:'+col+'" data-p="'+p+'"></div></div>'+
       '<div class="knums"><div class="knum"><div class="knum-v">'+(d.akhirL||0)+'</div><div class="knum-l">L</div></div>'+
       '<div class="knum"><div class="knum-v">'+(d.akhirP||0)+'</div><div class="knum-l">P</div></div>'+
-      '<div class="knum"><div class="knum-v" style="color:'+KC[k]+'">'+(d.total||0)+'</div><div class="knum-l">Total</div></div></div>';
-    div.addEventListener('click',(function(kk){ return function(){ showDetail(String(kk)); }; })(k));
+      '<div class="knum"><div class="knum-v" style="color:'+col+'">'+(d.total||0)+'</div><div class="knum-l">Total</div></div></div>';
+    div.addEventListener('click',(function(kk){ return function(){ showDetail(kk); }; })(kode));
     g.appendChild(div);
-  }
+  });
   setTimeout(function(){ document.querySelectorAll('#slb-root .kbar-fill').forEach(function(e){ e.style.transition='width 1s ease'; e.style.width=e.getAttribute('data-p')+'%'; }); },120);
 }
 
@@ -692,9 +859,10 @@ function renderAbsen(t){
 }
 
 function renderKbar(kd){
-  var max=1; for(var k=1;k<=6;k++){ var tot=(kd[String(k)]||{}).total||0; if(tot>max) max=tot; }
+  var list=(KELAS.length>0)?KELAS:defaultKelasList();
+  var max=1; list.forEach(function(kobj){ var tot=(kd[String(kobj.kode)]||{}).total||0; if(tot>max) max=tot; });
   var h='';
-  for(var k=1;k<=6;k++){ var d=kd[String(k)]||{}, w=Math.round(((d.total||0)/max)*100); h+='<div class="prow"><div class="plbl">Kelas '+k+'</div><div class="ptrack"><div class="pfill" style="background:'+KC[k]+'" data-w="'+w+'"></div></div><div class="pval">'+(d.total||0)+'</div></div>'; }
+  list.forEach(function(kobj){ var kode=String(kobj.kode), d=kd[kode]||{}, w=Math.round(((d.total||0)/max)*100); h+='<div class="prow"><div class="plbl">'+(kobj.nama||('Kelas '+kode))+'</div><div class="ptrack"><div class="pfill" style="background:'+kelasColor(kode).s+'" data-w="'+w+'"></div></div><div class="pval">'+(d.total||0)+'</div></div>'; });
   el('D_kbar').innerHTML=h;
   setTimeout(function(){ document.querySelectorAll('#D_kbar .pfill').forEach(function(e){ e.style.transition='width 1.2s ease'; e.style.width=e.getAttribute('data-w')+'%'; }); },80);
 }
@@ -710,9 +878,9 @@ function showDetail(kelas){
   if(!S.dash||!S.dash.kelasData) return;
   var kd=S.dash.kelasData[kelas]||{}, h=kd.hari||{}, tot=kd.total||0;
   var maxAg=1; AGAMA.forEach(function(a){ var v=(kd.agama||{})[a]||{L:0,P:0}; var j=(v.L||0)+(v.P||0); if(j>maxAg) maxAg=j; });
-  var agRows=AGAMA.map(function(a){ var v=(kd.agama||{})[a]||{L:0,P:0}, j=(v.L||0)+(v.P||0), pw=Math.round(j/maxAg*100); return '<tr><td style="text-align:left;padding:4px 7px">'+a+'</td><td>'+(v.L||0)+'</td><td>'+(v.P||0)+'</td><td style="padding:4px;min-width:50px"><div style="height:7px;background:#fde8e8;border-radius:4px;overflow:hidden"><div style="width:'+pw+'%;height:100%;background:'+KC[parseInt(kelas)]+';border-radius:4px"></div></div></td><td style="font-weight:800">'+j+'</td></tr>'; }).join('');
+  var agRows=AGAMA.map(function(a){ var v=(kd.agama||{})[a]||{L:0,P:0}, j=(v.L||0)+(v.P||0), pw=Math.round(j/maxAg*100); return '<tr><td style="text-align:left;padding:4px 7px">'+a+'</td><td>'+(v.L||0)+'</td><td>'+(v.P||0)+'</td><td style="padding:4px;min-width:50px"><div style="height:7px;background:#fde8e8;border-radius:4px;overflow:hidden"><div style="width:'+pw+'%;height:100%;background:'+kelasColor(kelas).s+';border-radius:4px"></div></div></td><td style="font-weight:800">'+j+'</td></tr>'; }).join('');
   var usRows=''; USIA.forEach(function(u){ var v=(kd.usia||{})[u]||{L:0,P:0}; var j=(v.L||0)+(v.P||0); if(j>0) usRows+='<tr><td>'+u+'</td><td>'+(v.L||0)+'</td><td>'+(v.P||0)+'</td><td style="font-weight:800">'+j+'</td></tr>'; });
-  el('P_det').innerHTML='<div class="det-hdr" style="background:'+KG[parseInt(kelas)]+'"><div class="det-knum">'+kelas+'</div><div class="det-info"><h3>Kelas '+kelas+'</h3><p>Wali: '+(kd.namaWali||'-')+' | '+fmtB(S.bulan)+'</p></div></div>'+
+  el('P_det').innerHTML='<div class="det-hdr" style="background:'+kelasColor(kelas).g+'"><div class="det-knum">'+kelas+'</div><div class="det-info"><h3>'+kelasNamaOf(kelas)+'</h3><p>Wali: '+(kd.namaWali||kelasWaliOf(kelas)||'-')+' | '+fmtB(S.bulan)+'</p></div></div>'+
     '<div class="hero" style="margin-bottom:14px"><div class="hc lk"><div class="hc-bg"></div><div class="hc-num">'+(kd.akhirL||0)+'</div><div class="hc-lbl">Laki-laki</div></div><div class="hc pr"><div class="hc-bg"></div><div class="hc-num">'+(kd.akhirP||0)+'</div><div class="hc-lbl">Perempuan</div></div><div class="hc tt"><div class="hc-bg"></div><div class="hc-num">'+tot+'</div><div class="hc-lbl">Total</div></div></div>'+
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px"><div class="card" style="padding:14px"><div class="sec-ttl">Agama</div><table class="tbl"><thead><tr><th>Agama</th><th>L</th><th>P</th><th></th><th>JML</th></tr></thead><tbody>'+agRows+'</tbody></table></div><div class="card" style="padding:14px"><div class="sec-ttl">Usia</div><table class="tbl"><thead><tr><th>Usia</th><th>L</th><th>P</th><th>JML</th></tr></thead><tbody>'+(usRows||'<tr><td colspan="4" style="color:var(--muted)">-</td></tr>')+'</tbody></table></div></div>'+
     '<div class="card" style="padding:14px;margin-bottom:14px"><div class="sec-ttl">Hari</div><div class="hari"><div class="hrc hs"><div class="hrc-n">'+(h.sekolah||0)+'</div><div class="hrc-l">Sekolah</div></div><div class="hrc hl"><div class="hrc-n">'+(h.libur||0)+'</div><div class="hrc-l">Libur</div></div><div class="hrc hb"><div class="hrc-n">'+(h.besar||0)+'</div><div class="hrc-l">Besar</div></div><div class="hrc hm"><div class="hrc-n">'+(h.minggu||0)+'</div><div class="hrc-l">Minggu</div></div><div class="hrc hj"><div class="hrc-n">'+(h.jumlah||0)+'</div><div class="hrc-l">Total</div></div></div></div>'+
@@ -743,9 +911,9 @@ function hitungHari(){ setVal('f_HJ',n(getVal('f_HS'))+n(getVal('f_HL'))+n(getVa
 
 function goInput(){
   var k=S.ak, taStr=ta(S.bulan);
-  setText('IN_klbl',k); setText('IN_ta',taStr);
+  setText('IN_klbl',kelasNamaOf(k)); setText('IN_ta',taStr);
   el('IN_badge').textContent=k;
-  el('IN_badge').style.background=KC[parseInt(k)]||'#c62828';
+  el('IN_badge').style.background=kelasColor(k).s;
   setVal('f_KL',k);
   var months=bulanTA(taStr);
   var sel=el('IN_bulan'); sel.innerHTML='';
@@ -761,7 +929,8 @@ async function loadInput(){
   if(!r.ok){ toast('Gagal memuat: '+(r.msg||''),'err'); el('IN_status').innerHTML=''; return; }
   var lap=r.laporan||{},har=r.hari||{},ind=r.induk||{},agama=r.agama||{},usia=r.usia||{};
   el('IN_status').innerHTML=r.hasData?'<div class="status-ok">Data bulan <strong>'+fmtB(bulan)+'</strong> sudah ada. Edit dan simpan ulang untuk memperbarui.</div>':'<div class="status-empty">Belum ada data untuk bulan <strong>'+fmtB(bulan)+'</strong>. Isi form lalu simpan.</div>';
-  setVal('f_NS',ind.namaSekolah||''); setVal('f_NW',ind.namaWali||''); setVal('f_NW2',ind.nipWali||''); setVal('f_NK',ind.namaKepsek||''); setVal('f_NK2',ind.nipKepsek||''); setVal('f_TT',ind.tempatTgl||'');
+  var sk=S.sekolah||{};
+  setVal('f_NS',ind.namaSekolah||sk.namaSekolah||''); setVal('f_NW',ind.namaWali||kelasWaliOf(S.ak)||''); setVal('f_NW2',ind.nipWali||''); setVal('f_NK',ind.namaKepsek||sk.namaKepsek||''); setVal('f_NK2',ind.nipKepsek||sk.nipKepsek||''); setVal('f_TT',ind.tempatTgl||'');
   setVal('f_AL',lap.awalL||0); setVal('f_AP',lap.awalP||0); setVal('f_KkL',lap.keluarL||0); setVal('f_KkP',lap.keluarP||0); setVal('f_ML',lap.masukL||0); setVal('f_MP',lap.masukP||0); setVal('f_SK',lap.sakit||0); setVal('f_IJ',lap.ijin||0); setVal('f_AL2',lap.alpa||0); hitung();
   setVal('f_HS',har.sekolah||0); setVal('f_HL',har.libur||0); setVal('f_HB',har.besar||0); setVal('f_HM',har.minggu||0); hitungHari();
   AGAMA.forEach(function(ag){ var v=agama[ag]||{L:0,P:0}; var eL=document.querySelector('#slb-root .ag-L[data-ag="'+ag+'"]'); var eP=document.querySelector('#slb-root .ag-P[data-ag="'+ag+'"]'); if(eL) eL.value=v.L||0; if(eP) eP.value=v.P||0; agSum(ag); });
@@ -804,7 +973,7 @@ async function gantiPw(){
 }
 
 function goCetak(){
-  setText('CT_klbl',S.ak);
+  setText('CT_klbl',kelasNamaOf(S.ak));
   var taStr=ta(S.bulan), months=bulanTA(taStr);
   var sel=el('CT_bulan'); sel.innerHTML='';
   months.forEach(function(b){ var o=document.createElement('option'); o.value=b; o.textContent=fmtB(b); if(b===S.bulan) o.selected=true; sel.appendChild(o); });
@@ -842,11 +1011,250 @@ function cetakLaporan(){
   if(w){ setTimeout(function(){ URL.revokeObjectURL(url); },10000); } else { URL.revokeObjectURL(url); window.print(); }
 }
 
+/* ================= ADMIN MODULE ================= */
+var KELAS = [];
+var PALETTE = [
+  {s:'#e84393', g:'linear-gradient(135deg,#c0166e,#e84393)'},
+  {s:'#f9a825', g:'linear-gradient(135deg,#b7780a,#f9a825)'},
+  {s:'#27ae60', g:'linear-gradient(135deg,#145a32,#27ae60)'},
+  {s:'#0277bd', g:'linear-gradient(135deg,#c62828,#0277bd)'},
+  {s:'#8e44ad', g:'linear-gradient(135deg,#6c3483,#8e44ad)'},
+  {s:'#c62828', g:'linear-gradient(135deg,#8b0000,#c62828)'},
+  {s:'#00897b', g:'linear-gradient(135deg,#00695c,#00897b)'},
+  {s:'#5d4037', g:'linear-gradient(135deg,#3e2723,#5d4037)'}
+];
+function defaultKelasList(){ var r=[]; for(var k=1;k<=6;k++) r.push({kode:String(k),nama:'Kelas '+k,wali:'',nipwali:''}); return r; }
+function kelasIdx(kode){ for(var i=0;i<KELAS.length;i++){ if(String(KELAS[i].kode)===String(kode)) return i; } return 0; }
+function kelasColor(kode){ return PALETTE[kelasIdx(kode)%PALETTE.length]; }
+function kelasNamaOf(kode){ var i=kelasIdx(kode); return (KELAS[i]&&KELAS[i].nama)?KELAS[i].nama:('Kelas '+kode); }
+function kelasWaliOf(kode){ var i=kelasIdx(kode); return (KELAS[i]&&KELAS[i].wali)?KELAS[i].wali:''; }
+
+async function loadKelasForApp(){
+  var r=await callAPIp({action:'getKelasList'});
+  KELAS=(r.ok&&r.data&&r.data.length>0)?r.data:defaultKelasList();
+}
+async function loadSekolahForApp(){
+  var r=await callAPIp({action:'getSekolahData'});
+  if(r.ok&&r.data){
+    S.sekolah=r.data;
+    if(r.data.namaSekolah){ document.querySelectorAll('#slb-root .sdn-title h2').forEach(function(e){ e.textContent=r.data.namaSekolah; }); }
+    if(r.data.logoBase64){ var img=document.querySelector('#slb-root .sdn-logo img'); if(img) img.src=r.data.logoBase64; }
+  }
+}
+function callAPIpost(payload){
+  return fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)})
+    .then(function(res){ return res.json(); })
+    .catch(function(){ return {ok:false,msg:'Gagal menghubungi server (POST). Pastikan Apps Script sudah di-deploy ulang.'}; });
+}
+
+function setupAdminTabs(){
+  var btnAdmin=el('tab-admin'); if(btnAdmin) btnAdmin.onclick=function(){ goAdminLogin(); };
+  var admBatal=el('ADM_batal'); if(admBatal) admBatal.onclick=function(){ goTab('dash'); };
+  var admBtn=el('ADM_btn'); if(admBtn) admBtn.onclick=doAdminLogin;
+  var admPw=el('ADM_pw'); if(admPw) admPw.addEventListener('keydown',function(e){ if(e.key==='Enter') doAdminLogin(); });
+  var admBack=el('ADM_back'); if(admBack) admBack.onclick=function(){ goTab('dash'); };
+  document.querySelectorAll('#slb-root .admin-subtab').forEach(function(b){ b.addEventListener('click',function(){ goAdminSub(b.getAttribute('data-sub')); }); });
+  var bSekolah=el('btn-simpan-sekolah'); if(bSekolah) bSekolah.onclick=saveSekolahAdmin;
+  var logoFile=el('SK_logoFile'); if(logoFile) logoFile.addEventListener('change',previewLogo);
+  var bKelas=el('btn-simpan-kelas'); if(bKelas) bKelas.onclick=saveKelasAdmin;
+  var bKelasBatal=el('btn-batal-kelas'); if(bKelasBatal) bKelasBatal.onclick=resetFormKelas;
+  var bGuru=el('btn-simpan-guru'); if(bGuru) bGuru.onclick=saveGuruAdmin;
+  var bGuruBatal=el('btn-batal-guru'); if(bGuruBatal) bGuruBatal.onclick=resetFormGuru;
+  var bGantiAdm=el('btn-ganti-pw-admin'); if(bGantiAdm) bGantiAdm.onclick=gantiPwAdmin;
+  var bResetKel=el('btn-reset-pw-kelas'); if(bResetKel) bResetKel.onclick=resetPwKelasAdmin;
+  var bTambahTa=el('btn-tambah-ta'); if(bTambahTa) bTambahTa.onclick=tambahTaAdmin;
+  var klList=el('KL_list'); if(klList) klList.addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return; var kode=b.getAttribute('data-kode'); if(b.classList.contains('abtn-e')) editKelasAdmin(kode); else if(b.classList.contains('abtn-d')) hapusKelasAdmin(kode); });
+  var grList=el('GR_list'); if(grList) grList.addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return; var id=b.getAttribute('data-id'); if(b.classList.contains('abtn-e')) editGuruAdmin(id); else if(b.classList.contains('abtn-d')) hapusGuruAdmin(id); });
+  var taList=el('TA_list'); if(taList) taList.addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return; var th=b.getAttribute('data-tahun'); if(b.classList.contains('abtn-a')) jadikanAktifTa(th); else if(b.classList.contains('abtn-d')) hapusTaAdmin(th); });
+}
+
+function goAdminLogin(){
+  goTab('admin-login'); el('ADM_msg').innerHTML=''; el('ADM_pw').value='';
+  var b=el('ADM_btn'); b.disabled=false; b.textContent='Masuk';
+  setTimeout(function(){ el('ADM_pw').focus(); },200);
+}
+async function doAdminLogin(){
+  var pw=el('ADM_pw').value.trim();
+  if(!pw){ el('ADM_msg').innerHTML='<p style="color:#c62828;font-size:.75rem;margin-bottom:8px;padding:7px;background:#fdecea;border-radius:6px">Masukkan password admin!</p>'; return; }
+  var b=el('ADM_btn'); b.disabled=true; b.textContent='...';
+  var r=await callAPIp({action:'adminLogin',password:pw});
+  if(r.ok){ b.textContent='OK'; setTimeout(function(){ goAdmin(); },250); }
+  else{ b.disabled=false; b.textContent='Masuk'; el('ADM_msg').innerHTML='<p style="color:#c62828;font-size:.75rem;margin-bottom:8px;padding:7px;background:#fdecea;border-radius:6px">'+(r.msg||'Password salah')+'</p>'; }
+}
+function goAdmin(){
+  goTab('admin'); goAdminSub('sekolah');
+  loadSekolahAdmin(); loadKelasAdmin(); loadGuruAdmin(); loadTaAdmin(); loadPwKelasSelect();
+}
+function goAdminSub(name){
+  document.querySelectorAll('#slb-root .admin-subtab').forEach(function(b){ b.classList.toggle('on',b.getAttribute('data-sub')===name); });
+  document.querySelectorAll('#slb-root .admin-panel').forEach(function(p){ p.classList.remove('on'); });
+  var p=el('AP-'+name); if(p) p.classList.add('on');
+}
+
+/* ---- 1) DATA SEKOLAH ---- */
+async function loadSekolahAdmin(){
+  var r=await callAPIp({action:'getSekolahData'});
+  if(r.ok&&r.data){
+    setVal('SK_nama',r.data.namaSekolah); setVal('SK_kepsek',r.data.namaKepsek); setVal('SK_nip',r.data.nipKepsek);
+    if(r.data.logoBase64){ var img=el('SK_logoPrev'); img.src=r.data.logoBase64; img.style.display='block'; }
+  }
+}
+function previewLogo(){
+  var f=el('SK_logoFile').files[0]; if(!f) return;
+  if(f.size>1500000){ toast('Ukuran logo maksimal 1.5MB','err'); return; }
+  var reader=new FileReader();
+  reader.onload=function(e){ var img=el('SK_logoPrev'); img.src=e.target.result; img.style.display='block'; };
+  reader.readAsDataURL(f);
+}
+async function saveSekolahAdmin(){
+  var btn=el('btn-simpan-sekolah'); btn.disabled=true; btn.textContent='Menyimpan...';
+  var payload={action:'saveSekolahData',namaSekolah:getVal('SK_nama'),namaKepsek:getVal('SK_kepsek'),nipKepsek:getVal('SK_nip')};
+  var fileEl=el('SK_logoFile'); if(fileEl.files&&fileEl.files[0]){ payload.logoBase64=el('SK_logoPrev').src; }
+  var r=await callAPIpost(payload);
+  btn.disabled=false; btn.textContent='Simpan Data Sekolah';
+  el('SK_msg').innerHTML=r.ok?'<div class="status-ok">Data sekolah tersimpan.</div>':('<div class="status-empty" style="color:#c62828">'+(r.msg||'Gagal menyimpan')+'</div>');
+  if(r.ok){ toast('Data sekolah tersimpan!'); loadSekolahForApp(); }
+}
+
+/* ---- 2) DATA KELAS ---- */
+async function loadKelasAdmin(){
+  el('KL_list').innerHTML='<div class="loading"><div class="spin"></div></div>';
+  var r=await callAPIp({action:'getKelasList'});
+  var data=(r.ok&&r.data)?r.data:[];
+  window._KLDATA=data;
+  if(data.length===0){ el('KL_list').innerHTML='<p style="color:var(--muted);font-size:.8rem">Belum ada data kelas.</p>'; return; }
+  var h='<table class="atbl"><thead><tr><th>Kode</th><th>Nama Kelas</th><th>Wali Kelas</th><th>NIP Wali</th><th>Aksi</th></tr></thead><tbody>';
+  data.forEach(function(k){
+    h+='<tr><td>'+k.kode+'</td><td>'+(k.nama||'-')+'</td><td>'+(k.wali||'-')+'</td><td>'+(k.nipwali||'-')+'</td>'+
+      '<td><button class="abtn abtn-e" data-kode="'+k.kode+'">Edit</button>'+
+      '<button class="abtn abtn-d" data-kode="'+k.kode+'">Hapus</button></td></tr>';
+  });
+  h+='</tbody></table>'; el('KL_list').innerHTML=h;
+}
+function editKelasAdmin(kode){
+  var d=(window._KLDATA||[]).find(function(x){ return String(x.kode)===String(kode); }); if(!d) return;
+  el('KL_formTtl').textContent='Edit Kelas '+d.kode;
+  setVal('KL_kodeAsli',d.kode); setVal('KL_kode',d.kode); setVal('KL_nama',d.nama); setVal('KL_wali',d.wali); setVal('KL_nipwali',d.nipwali); setVal('KL_pw','');
+}
+function resetFormKelas(){
+  el('KL_formTtl').textContent='Tambah / Edit Kelas';
+  setVal('KL_kodeAsli',''); setVal('KL_kode',''); setVal('KL_nama',''); setVal('KL_wali',''); setVal('KL_nipwali',''); setVal('KL_pw','');
+}
+async function saveKelasAdmin(){
+  var kode=getVal('KL_kode').trim(); if(!kode){ toast('Kode kelas wajib diisi','err'); return; }
+  var payload={action:'saveKelas',kodeAsli:getVal('KL_kodeAsli'),kode:kode,nama:getVal('KL_nama'),wali:getVal('KL_wali'),nipwali:getVal('KL_nipwali'),password:getVal('KL_pw')};
+  var r=await callAPIp(payload);
+  if(r.ok){ toast('Data kelas tersimpan!'); resetFormKelas(); loadKelasAdmin(); loadKelasForApp(); loadPwKelasSelect(); }
+  else{ toast(r.msg||'Gagal menyimpan kelas','err'); }
+}
+async function hapusKelasAdmin(kode){
+  if(!confirm('Hapus kelas '+kode+'? Data laporan kelas ini TIDAK otomatis terhapus.')) return;
+  var r=await callAPIp({action:'deleteKelas',kode:kode});
+  if(r.ok){ toast('Kelas dihapus'); loadKelasAdmin(); loadKelasForApp(); loadPwKelasSelect(); }
+  else{ toast(r.msg||'Gagal menghapus','err'); }
+}
+
+/* ---- 3) DATA GURU ---- */
+async function loadGuruAdmin(){
+  el('GR_list').innerHTML='<div class="loading"><div class="spin"></div></div>';
+  var r=await callAPIp({action:'getGuruList'});
+  var data=(r.ok&&r.data)?r.data:[];
+  window._GRDATA=data;
+  if(data.length===0){ el('GR_list').innerHTML='<p style="color:var(--muted);font-size:.8rem">Belum ada data guru.</p>'; return; }
+  var h='<table class="atbl"><thead><tr><th>Nama</th><th>NIP</th><th>Jabatan</th><th>Kelas Diampu</th><th>Aksi</th></tr></thead><tbody>';
+  data.forEach(function(g){
+    h+='<tr><td>'+g.nama+'</td><td>'+(g.nip||'-')+'</td><td>'+(g.jabatan||'-')+'</td><td>'+(g.kelasAsuh||'-')+'</td>'+
+      '<td><button class="abtn abtn-e" data-id="'+g.id+'">Edit</button>'+
+      '<button class="abtn abtn-d" data-id="'+g.id+'">Hapus</button></td></tr>';
+  });
+  h+='</tbody></table>'; el('GR_list').innerHTML=h;
+}
+function editGuruAdmin(id){
+  var d=(window._GRDATA||[]).find(function(x){ return String(x.id)===String(id); }); if(!d) return;
+  el('GR_formTtl').textContent='Edit Guru';
+  setVal('GR_idAsli',d.id); setVal('GR_nama',d.nama); setVal('GR_nip',d.nip); setVal('GR_jabatan',d.jabatan); setVal('GR_kelasAsuh',d.kelasAsuh);
+}
+function resetFormGuru(){
+  el('GR_formTtl').textContent='Tambah / Edit Guru';
+  setVal('GR_idAsli',''); setVal('GR_nama',''); setVal('GR_nip',''); setVal('GR_jabatan',''); setVal('GR_kelasAsuh','');
+}
+async function saveGuruAdmin(){
+  var nama=getVal('GR_nama').trim(); if(!nama){ toast('Nama guru wajib diisi','err'); return; }
+  var payload={action:'saveGuru',id:getVal('GR_idAsli'),nama:nama,nip:getVal('GR_nip'),jabatan:getVal('GR_jabatan'),kelasAsuh:getVal('GR_kelasAsuh')};
+  var r=await callAPIp(payload);
+  if(r.ok){ toast('Data guru tersimpan!'); resetFormGuru(); loadGuruAdmin(); }
+  else{ toast(r.msg||'Gagal menyimpan guru','err'); }
+}
+async function hapusGuruAdmin(id){
+  if(!confirm('Hapus data guru ini?')) return;
+  var r=await callAPIp({action:'deleteGuru',id:id});
+  if(r.ok){ toast('Data guru dihapus'); loadGuruAdmin(); }
+  else{ toast(r.msg||'Gagal menghapus','err'); }
+}
+
+/* ---- 4) DATA PASSWORD ---- */
+async function loadPwKelasSelect(){
+  var r=await callAPIp({action:'getKelasList'});
+  var data=(r.ok&&r.data&&r.data.length>0)?r.data:defaultKelasList();
+  var sel=el('PW_kelas'); if(!sel) return; sel.innerHTML='';
+  data.forEach(function(k){ var o=document.createElement('option'); o.value=k.kode; o.textContent=(k.nama||('Kelas '+k.kode)); sel.appendChild(o); });
+}
+async function gantiPwAdmin(){
+  var op=getVal('PW_adOld'),np=getVal('PW_adNew');
+  if(!op||!np){ toast('Isi kedua field password','err'); return; }
+  if(np.length<6){ toast('Password baru minimal 6 karakter','err'); return; }
+  var r=await callAPIp({action:'changeAdminPassword',oldPassword:op,newPassword:np});
+  if(r.ok){ toast('Password admin berhasil diubah!'); setVal('PW_adOld',''); setVal('PW_adNew',''); }
+  else{ toast(r.msg||'Gagal','err'); }
+}
+async function resetPwKelasAdmin(){
+  var kelas=getVal('PW_kelas'),np=getVal('PW_kelNew');
+  if(!kelas){ toast('Pilih kelas','err'); return; }
+  if(!np||np.length<6){ toast('Password baru minimal 6 karakter','err'); return; }
+  var r=await callAPIp({action:'adminResetPassword',kelas:kelas,newPassword:np});
+  if(r.ok){ toast('Password kelas '+kelas+' berhasil direset!'); setVal('PW_kelNew',''); }
+  else{ toast(r.msg||'Gagal','err'); }
+}
+
+/* ---- 5) TAHUN AJARAN ---- */
+async function loadTaAdmin(){
+  el('TA_list').innerHTML='<div class="loading"><div class="spin"></div></div>';
+  var r=await callAPIp({action:'getTahunAjaranList'});
+  var data=(r.ok&&r.data)?r.data:[];
+  if(data.length===0){ el('TA_list').innerHTML='<p style="color:var(--muted);font-size:.8rem">Belum ada data tahun ajaran.</p>'; return; }
+  var h='<table class="atbl"><thead><tr><th>Tahun Ajaran</th><th>Status</th><th>Aksi</th></tr></thead><tbody>';
+  data.forEach(function(t){
+    h+='<tr><td>'+t.tahun+'</td><td><span class="admin-badge '+(t.aktif?'ok':'no')+'">'+(t.aktif?'Aktif':'Nonaktif')+'</span></td><td>'+
+      (t.aktif?'':'<button class="abtn abtn-a" data-tahun="'+t.tahun+'">Jadikan Aktif</button>')+
+      '<button class="abtn abtn-d" data-tahun="'+t.tahun+'">Hapus</button></td></tr>';
+  });
+  h+='</tbody></table>'; el('TA_list').innerHTML=h;
+}
+async function tambahTaAdmin(){
+  var th=getVal('TA_baru').trim(); if(!th){ toast('Isi tahun ajaran, mis. 2025/2026','err'); return; }
+  var r=await callAPIp({action:'addTahunAjaran',tahun:th});
+  if(r.ok){ toast('Tahun ajaran ditambahkan!'); setVal('TA_baru',''); loadTaAdmin(); }
+  else{ toast(r.msg||'Gagal','err'); }
+}
+async function jadikanAktifTa(th){
+  var r=await callAPIp({action:'setTahunAjaranAktif',tahun:th});
+  if(r.ok){ toast('Tahun ajaran '+th+' dijadikan aktif'); loadTaAdmin(); }
+  else{ toast(r.msg||'Gagal','err'); }
+}
+async function hapusTaAdmin(th){
+  if(!confirm('Hapus tahun ajaran '+th+'?')) return;
+  var r=await callAPIp({action:'deleteTahunAjaran',tahun:th});
+  if(r.ok){ toast('Tahun ajaran dihapus'); loadTaAdmin(); }
+  else{ toast(r.msg||'Gagal','err'); }
+}
+
 (async function init(){
   setupTabs();
   el('D_load').innerHTML='<div class="spin"></div><br><br>Menghubungkan ke server...';
   var ping=await callAPIp({action:'ping'});
   if(!ping.ok){ el('D_load').innerHTML='<div style="color:#c62828;font-weight:700;padding:20px;background:#fdecea;border-radius:10px">Tidak bisa terhubung ke server. Pastikan URL API sudah benar dan deployment Apps Script aktif.<br><br><small style="color:#888">URL: '+API+'</small></div>'; return; }
+  await loadKelasForApp();
+  await loadSekolahForApp();
   var bl=await callAPIp({action:'getBulanList'});
   var list=(bl.ok&&bl.data&&bl.data.length>0)?bl.data:[];
   S.bulanList=list;
